@@ -1,4 +1,4 @@
-# Build a Portfolio Site Project
+# Build an Item Catalog Application
 This project is part of Udacity's Full Stack Web Developer Nanodegree Program.
 The objective was to build a web application using **flask** that provides a list of items within a variety of categories. The application also implements authorization and authentication using a Google Account. After signing in, a user has the ability to add, update, or delete items and categories. The application also provides JSON endpoints.
 
