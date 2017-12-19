@@ -1,0 +1,87 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+
+<div class="container-fluid">
+    <div class="row flex-xl-nowrap">
+        <div class="col-12 col-md-3 col-xl-2 bd-sidebar">
+            <form classs="bd-search d-flex align-items-center">
+                <button class="btn btn-link bd-search-docs-toggle d-md-none p-0 ml-3 collapsed" type="button" data-toggle="collapse" data-target="#bd-docs-nav" aria-controls="bd-docs-nav" aria-expanded="false" aria-label="Toggle docs navigation">
+                    <img src="{{url_for('static', filename='menu.svg')}}">
+                </button>
+            </form>
+            <!-- collapseable sidebar for genre navigation !-->
+            <nav class="bd-links collapse" id="bd-docs-nav" style="">
+                <div class="bd-toc-item active">
+                    <a class="bd-toc-link" href="{{url_for('newGenre')}}">
+                        Add new genre
+                    </a>
+                    <ul class="nav bd-sidenav">
+                        {% for i in genres %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="movie-actions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {{i.name}}
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="movie-actions">
+                                <a class="dropdown-item" href="{{url_for('showMovies', genre_id = i.id)}}">Show {{i.name}} movies</a>
+                                <div class="dropdown-divider"></div>
+                                {% if i.user_id == user_id %}
+                                    <a class="dropdown-item" href="{{url_for('newMovie', genre_id = i.id)}}">Add {{i.name}} movie</a>
+                                    <a class="dropdown-item" href="{{url_for('editGenre', genre_id = i.id)}}">Rename genre</a>
+                                    <a class="dropdown-item" href="{{url_for('deleteGenre', genre_id = i.id)}}">Delete genre</a>
+                                {% else %}
+                                    <a class="dropdown-item disabled" href="#" data-toggle="tooltip" title="You can only add movies to a genre you created.">Add {{i.name}} movie</a>
+                                    <a class="dropdown-item disabled" href="#" data-toggle="tooltip" title="You can only rename genres you created.">Rename genre</a>
+                                    <a class="dropdown-item disabled" href="#" data-toggle="tooltip" title="You can only delete genres you created.">Delete genre</a>
+                                {% endif %}
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </nav>
+        </div>
+
+        <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content" role="main">
+            <!-- Flash messages to appear above movie cards !-->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                <ul class=flashes>
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{category}} alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            {% endwith %}
+
+            {% if current_genre %}
+                <h1 class="bd-title" id="content">{{current_genre.name}} Movies</h1>
+            {% else %}
+                <h1 class="bd-title" id="content">All Movies</h1>
+            {% endif %}
+                <div class="card-deck">
+                {% for j in movies %}
+                    <div class="col-sm-12 col-md-12 col-lg-12">
+                        <div class="card movie-card mb-3">
+                            <div class="card-body text-start">
+                                <h4>{{j.title}}</h4>
+                                <h6 class="card-subtitle mb-2 text-muted">{{j.year}} {{j.rating}}</h6>
+                                <p class="card-text">{{j.description}}</p>
+                            </div>
+                            <div class="card-footer bg-white text-start">
+                                <a href="{{url_for('editMovie', genre_id=j.genre_id, movie_id=j.id)}}" class="card-link small">Edit</a>
+                                <a href="{{url_for('deleteMovie', genre_id=j.genre_id, movie_id=j.id)}}" class="card-link small">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
+        </main>
+    </div>
+</div>
+{% endblock %}

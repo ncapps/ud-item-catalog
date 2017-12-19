@@ -1,0 +1,27 @@
+<header class="navbar navbar-expand navbar-dark flex-column flex-md-row bd-navbar">
+    <div class="navbar-nav-scroll">
+        <ul class="navbar-nav bd-navbar-nav flex-row">
+            <li class="nav-item">
+                <a class="nav-link active" href="{{url_for('showGenres')}}">Movie Catalog</a>
+            </li>
+        </ul>
+    </div>
+    <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+        {% if 'email' in session %}
+        <li class="nav-item">
+            {% if session.picture == '' %}
+            	<img src="{{url_for('static', filename='blank_user.gif')}}" class="user-img-thumbnail">
+            {% else %}
+            	<img src="{{session.picture}}" class="user-img-thumbnail">
+            {% endif %}
+	   </li>
+       {% endif%}
+        <li class="nav-item">
+        	{% if 'email' not in session %}
+        		<a class="nav-link p-2" href="{{url_for('showLogin')}}">Sign in</a>
+        	{% else %}
+        		<a class="nav-link p-2" href="{{url_for('disconnect')}}">Sign out</a>
+        	{% endif %}
+        </li>
+    </ul>
+</header>
